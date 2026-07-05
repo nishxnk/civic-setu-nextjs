@@ -7,6 +7,7 @@
 !.yarn/plugins
 !.yarn/releases
 !.yarn/versions
+.claude
 
 # testing
 /coverage
@@ -51,4 +52,7 @@ models/*.pt
 D:\civic-setu-nextjs\dataset_rdd\train\images
 dataset
 dataset_rdd
+<<<<<<< HEAD
 .claude
+=======
+>>>>>>> dcd760eada156c4e0e0cf69e81f3274a00f1d6dd
