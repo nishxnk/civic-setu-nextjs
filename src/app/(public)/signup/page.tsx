@@ -34,7 +34,7 @@ export default function SignupPage() {
         localStorage.setItem("user", JSON.stringify(res.user));
       } catch { /* */ }
       await refreshToken();
-      router.push("/citizen");
+      router.push("/citizen/dashboard");
     } catch (err: unknown) {
       setError(firebaseErrorToMessage((err as { code?: string }).code || ""));
     } finally { setLoading(false); }
@@ -46,7 +46,7 @@ export default function SignupPage() {
       const result = await signInWithPopup(auth, googleProvider);
       const idToken = await result.user.getIdToken();
       try { await authAPI.firebaseRegister(idToken, result.user.displayName || ""); } catch { /* */ }
-      await refreshToken(); router.push("/citizen");
+      await refreshToken(); router.push("/citizen/dashboard");
     } catch (err: unknown) {
       if ((err as { code?: string }).code === "auth/popup-closed-by-user") return;
       setError(firebaseErrorToMessage((err as { code?: string }).code || ""));

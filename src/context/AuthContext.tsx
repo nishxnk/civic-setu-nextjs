@@ -21,14 +21,34 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       if (firebaseUser) {
         const token = await firebaseUser.getIdToken();
-        setUser({
+        // Build base user from Firebase
+        const baseUser: IAuthUser = {
           uid: firebaseUser.uid,
           email: firebaseUser.email!,
           displayName:
             firebaseUser.displayName || firebaseUser.email?.split("@")[0] || "User",
           photoURL: firebaseUser.photoURL || undefined,
           token,
-        });
+          role: "admin", // default — new registrations are admin
+        };
+        setUser(baseUser);
+
+        // Fetch role from MongoDB via API
+        try {
+          const res = await fetch("/api/users/profile", {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          if (res.ok) {
+            const data = await res.json();
+            if (data.user?.role) {
+              setUser((prev) =>
+                prev ? { ...prev, role: data.user.role } : prev
+              );
+            }
+          }
+        } catch {
+          // Keep default role if API fails
+        }
       } else {
         setUser(null);
       }

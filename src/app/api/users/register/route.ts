@@ -33,7 +33,7 @@ export async function POST(request: NextRequest) {
         firebaseUid: uid,
         name: name || decoded.name || email?.split("@")[0] || "User",
         email: email || "",
-        role: "citizen",
+        role: "admin",
         authProvider,
         photoURL: decoded.picture || "",
       });

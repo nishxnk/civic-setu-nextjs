@@ -35,3 +35,19 @@ export function verifyIdToken(token: string): Promise<DecodedIdToken> {
   const auth = getAuth(getOrInitApp());
   return auth.verifyIdToken(token);
 }
+
+export async function createFirebaseUser(
+  email: string,
+  password: string,
+  displayName: string
+): Promise<{ uid: string }> {
+  const auth = getAuth(getOrInitApp());
+  const userRecord = await auth.createUser({
+    email,
+    password,
+    displayName,
+    emailVerified: false,
+  });
+  return { uid: userRecord.uid };
+}
+

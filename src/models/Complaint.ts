@@ -27,7 +27,7 @@ const complaintSchema = new mongoose.Schema<IComplaintDocument>(
     },
     status: {
       type: String,
-      enum: ["pending", "in-progress", "resolved", "rejected"],
+      enum: ["pending", "in-progress", "resolved", "rejected", "verified", "closed"],
       default: "pending",
     },
     priority: {
@@ -43,6 +43,31 @@ const complaintSchema = new mongoose.Schema<IComplaintDocument>(
     trackingNumber: { type: String, unique: true },
     resolutionNotes: { type: String },
     resolutionDate: { type: Date },
+    // Enhanced workflow fields
+    assetId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Asset",
+    },
+    checklist: [{
+      task: { type: String, required: true },
+      completed: { type: Boolean, default: false },
+      completedAt: { type: Date },
+      completedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+    }],
+    beforePhoto: { type: String },
+    afterPhoto: { type: String },
+    startedAt: { type: Date },
+    completedAt: { type: Date },
+    verifiedBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+    verifiedAt: { type: Date },
+    rejectionReason: { type: String },
+    // SLA tracking
+    slaDeadline: { type: Date },
+    slaBreached: { type: Boolean, default: false },
+    escalationLevel: { type: Number, default: 0 },
   },
   { timestamps: true }
 );

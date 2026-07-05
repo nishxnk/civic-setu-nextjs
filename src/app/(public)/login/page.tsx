@@ -31,7 +31,9 @@ export default function LoginPage() {
         localStorage.setItem("user", JSON.stringify(res.user));
       } catch { /* backend down, Firebase-only session */ }
       await refreshToken();
-      router.push("/citizen");
+      const savedUser = JSON.parse(localStorage.getItem("user") || "{}");
+      const role = savedUser.role || "citizen";
+      router.push(role === "admin" ? "/admin/dashboard" : role === "worker" ? "/worker/dashboard" : "/citizen/dashboard");
     } catch (err: unknown) {
       setError(firebaseErrorToMessage((err as { code?: string }).code || ""));
     } finally {
@@ -50,8 +52,9 @@ export default function LoginPage() {
         localStorage.setItem("user", JSON.stringify(res.user));
       } catch { /* */ }
       await refreshToken();
-      const user = JSON.parse(localStorage.getItem("user") || "{}");
-      router.push(user.role === "admin" ? "/admin" : "/citizen");
+      const savedUser = JSON.parse(localStorage.getItem("user") || "{}");
+      const role = savedUser.role || "citizen";
+      router.push(role === "admin" ? "/admin/dashboard" : role === "worker" ? "/worker/dashboard" : "/citizen/dashboard");
     } catch (err: unknown) {
       const code = (err as { code?: string }).code;
       if (code === "auth/popup-closed-by-user") return;
